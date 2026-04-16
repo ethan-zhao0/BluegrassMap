@@ -1,80 +1,96 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
-import Tooltip from './Tooltip'
 
-// swap this out for your real data later
-const plantData = {}
-
-const APP_CORE = new Set([
-  'West Virginia', 'Kentucky', 'Virginia', 'Tennessee',
-  'North Carolina', 'Pennsylvania', 'Georgia', 'Alabama'
-])
-
-function getColor(data, threshold) {
-  if (!data || data.count < threshold) return '#cdc4a4'
-  if (data.count < 15) return '#e8d8a0'
-  if (data.count < 22) return '#c8a050'
-  if (data.count < 28) return '#9a6828'
-  return '#5a3010'
+function getColor(data, threshold, name, selectedState) {
+  if (name === selectedState) return '#439B47'
+  if (!data || data.count < threshold) return 'transparent'
+  if (data.count < 5)  return '#3a7a20'
+  if (data.count < 10) return '#5aaa30'
+  if (data.count < 20) return '#8acc50'
+  return '#b8e870'
 }
 
-function getStroke(name, data, threshold) {
-  if (data && data.count >= threshold && APP_CORE.has(name)) return '#2a1204'
-  if (data && data.count >= threshold) return '#7a5020'
-  return '#b8a878'
+function getStroke(name, selectedState) {
+  if (name === selectedState) return '#ffffff'
+  return 'rgba(255,255,255,0.6)'
 }
 
-function getStrokeWidth(name, data, threshold) {
-  if (data && data.count >= threshold && APP_CORE.has(name)) return 1.8
-  if (data && data.count >= threshold) return 0.9
-  return 0.4
+function getStrokeWidth(name, selectedState) {
+  return name === selectedState ? 3 : 1.5
 }
 
-export default function USMap({ threshold }) {
+function getOpacity(name, selectedState) {
+  if (!selectedState) return 1
+  return name === selectedState ? 1 : 0.4
+}
+
+export default function USMap({ stateData, threshold, selectedState, onStateClick, onClickOutside }) {
   const svgRef = useRef(null)
-  const [geoData, setGeoData] = useState(null)
-  const [tooltip, setTooltip] = useState({
-    visible: false, x: 0, y: 0, state: '', data: null
-  })
+  const geoRef = useRef(null)
+  const onClickOutsideRef = useRef(onClickOutside)
+
+  useEffect(() => {
+    onClickOutsideRef.current = onClickOutside
+  }, [onClickOutside])
 
   useEffect(() => {
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
       .then(r => r.json())
       .then(us => {
-        const states = topojson.feature(us, us.objects.states)
-        setGeoData(states)
+        geoRef.current = topojson.feature(us, us.objects.states)
+        draw()
       })
   }, [])
 
-  useEffect(() => {
-    if (!geoData || !svgRef.current) return
+  useEffect(() => { draw() }, [stateData, threshold, selectedState])
 
-    const svg = d3.select(svgRef.current)
-    const projection = d3.geoAlbersUsa().scale(1060).translate([480, 270])
-    const pathGen = d3.geoPath().projection(projection)
+  function draw() {
+    if (!geoRef.current || !svgRef.current) return
+
+    const svg     = d3.select(svgRef.current)
+    const proj    = d3.geoAlbersUsa().scale(1060).translate([480, 270])
+    const pathGen = d3.geoPath().projection(proj)
+
+    // transparent full-svg background rect to catch outside clicks
+    svg.selectAll('.bg-rect')
+      .data([null])
+      .join('rect')
+      .attr('class', 'bg-rect')
+      .attr('width', 960)
+      .attr('height', 540)
+      .attr('fill', 'transparent')
+      .on('click', () => onClickOutsideRef.current())
 
     svg.selectAll('path')
-      .data(geoData.features)
+      .data(geoRef.current.features)
       .join('path')
-      .attr('d', pathGen)
-      .attr('fill',         d => getColor(plantData[d.properties.name], threshold))
-      .attr('stroke',       d => getStroke(d.properties.name, plantData[d.properties.name], threshold))
-      .attr('stroke-width', d => getStrokeWidth(d.properties.name, plantData[d.properties.name], threshold))
+      .attr('d',            pathGen)
+      .attr('fill',         d => getColor(stateData[d.properties.name], threshold, d.properties.name, selectedState))
+      .attr('stroke',       d => getStroke(d.properties.name, selectedState))
+      .attr('stroke-width', d => getStrokeWidth(d.properties.name, selectedState))
+      .attr('opacity',      d => getOpacity(d.properties.name, selectedState))
       .attr('cursor', 'pointer')
+      .on('click', function(event, d) {
+        event.stopPropagation()
+        onStateClick(d.properties.name)
+      })
       .on('mousemove', function(event, d) {
-  const rect = svgRef.current.getBoundingClientRect()
-  const x = event.clientX - rect.left
-  const y = event.clientY - rect.top
-  setTooltip({
-    visible: true,
-    x, y,
-    state: d.properties.name,
-    data: plantData[d.properties.name] || null,
-  })
-})
-
-  }, [geoData, threshold])
+        const name  = d.properties.name
+        const count = stateData[name]?.count || 0
+        if (name !== selectedState) {
+          d3.select(this).attr('stroke', '#ffffff').attr('stroke-width', 2)
+        }
+        d3.select(this).select('title').remove()
+        d3.select(this).append('title').text(`${name} · ${count} plants`)
+      })
+      .on('mouseleave', function(event, d) {
+        const name = d.properties.name
+        d3.select(this)
+          .attr('stroke',       getStroke(name, selectedState))
+          .attr('stroke-width', getStrokeWidth(name, selectedState))
+      })
+  }
 
   return (
     <div className="map-wrap">
@@ -82,9 +98,8 @@ export default function USMap({ threshold }) {
         ref={svgRef}
         width="100%"
         viewBox="0 0 960 540"
-        style={{ display: 'block', background: '#e8dbb8' }}
+        style={{ display: 'block' }}
       />
-      <Tooltip {...tooltip} threshold={threshold} />
     </div>
   )
 }
