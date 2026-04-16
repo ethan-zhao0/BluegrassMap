@@ -57,7 +57,7 @@ return (
   <div
     className="range-track-wrap"
     ref={trackRef}
-    style={{ width: '97%', left: 8 }}
+    style={{ width: '100%', left: 0 }}
   >
     <div className="range-inactive" style={{ left: 0, right: 0 }} />
     <div

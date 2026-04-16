@@ -4,12 +4,12 @@ import RightPanel from './components/RightPanel'
 import PlantDetail from './components/PlantDetail'
 import rawData from './data/plants.json'
 
-const DATA_YEAR_MIN = 1940
+const DATA_YEAR_MIN = 1962
 const DATA_YEAR_MAX = 2026
 
 export default function App() {
   const [threshold, setThreshold]           = useState(5)
-  const [yearRange, setYearRange]           = useState([1970, 2026])
+  const [yearRange, setYearRange]           = useState([1970, 2000])
   const [includeNoYear, setIncludeNoYear]   = useState(true)
   const [selectedState, setSelectedState]   = useState(null)
   const [selectedPlant, setSelectedPlant]   = useState(null)
