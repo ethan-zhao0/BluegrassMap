@@ -10,61 +10,55 @@ function getColor(data, threshold, name, selectedState) {
   if (data.count < 20) return '#8acc50'
   return '#b8e870'
 }
-
 function getStroke(name, selectedState) {
-  if (name === selectedState) return '#ffffff'
-  return 'rgba(255,255,255,0.6)'
+  return name === selectedState ? '#ffffff' : 'rgba(255,255,255,0.6)'
 }
-
 function getStrokeWidth(name, selectedState) {
   return name === selectedState ? 3 : 1.5
 }
-
 function getOpacity(name, selectedState) {
   if (!selectedState) return 1
   return name === selectedState ? 1 : 0.4
 }
 
-export default function USMap({ stateData, threshold, selectedState, onStateClick, onClickOutside }) {
-  const svgRef = useRef(null)
-  const geoRef = useRef(null)
+export default function USMap({ stateData, threshold, selectedState, occurrenceCoords, onStateClick, onClickOutside }) {
+  const svgRef    = useRef(null)
+  const geoRef    = useRef(null)
+  const projRef   = useRef(null)
   const onClickOutsideRef = useRef(onClickOutside)
 
-  useEffect(() => {
-    onClickOutsideRef.current = onClickOutside
-  }, [onClickOutside])
+  useEffect(() => { onClickOutsideRef.current = onClickOutside }, [onClickOutside])
 
   useEffect(() => {
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
       .then(r => r.json())
       .then(us => {
-        geoRef.current = topojson.feature(us, us.objects.states)
+        geoRef.current  = topojson.feature(us, us.objects.states)
+        projRef.current = d3.geoAlbersUsa().scale(1060).translate([480, 270])
         draw()
       })
   }, [])
 
   useEffect(() => { draw() }, [stateData, threshold, selectedState])
 
+  useEffect(() => { drawDots() }, [occurrenceCoords])
+
   function draw() {
     if (!geoRef.current || !svgRef.current) return
-
     const svg     = d3.select(svgRef.current)
-    const proj    = d3.geoAlbersUsa().scale(1060).translate([480, 270])
-    const pathGen = d3.geoPath().projection(proj)
+    const pathGen = d3.geoPath().projection(projRef.current)
 
-    // transparent full-svg background rect to catch outside clicks
     svg.selectAll('.bg-rect')
-      .data([null])
-      .join('rect')
+      .data([null]).join('rect')
       .attr('class', 'bg-rect')
-      .attr('width', 960)
-      .attr('height', 540)
+      .attr('width', 960).attr('height', 540)
       .attr('fill', 'transparent')
       .on('click', () => onClickOutsideRef.current())
 
-    svg.selectAll('path')
+    svg.selectAll('.state-path')
       .data(geoRef.current.features)
       .join('path')
+      .attr('class', 'state-path')
       .attr('d',            pathGen)
       .attr('fill',         d => getColor(stateData[d.properties.name], threshold, d.properties.name, selectedState))
       .attr('stroke',       d => getStroke(d.properties.name, selectedState))
@@ -92,14 +86,33 @@ export default function USMap({ stateData, threshold, selectedState, onStateClic
       })
   }
 
+  function drawDots() {
+    if (!svgRef.current || !projRef.current) return
+    const svg = d3.select(svgRef.current)
+
+    svg.selectAll('.occ-dot').remove()
+
+    if (!occurrenceCoords || occurrenceCoords.length === 0) return
+
+    occurrenceCoords.forEach(coord => {
+      const projected = projRef.current([coord.lng, coord.lat])
+      if (!projected) return
+      svg.append('circle')
+        .attr('class', 'occ-dot')
+        .attr('cx', projected[0])
+        .attr('cy', projected[1])
+        .attr('r', 3)
+        .attr('fill', '#c8e870')
+        .attr('fill-opacity', 0.75)
+        .attr('stroke', '#2a3a14')
+        .attr('stroke-width', 0.5)
+        .attr('pointer-events', 'none')
+    })
+  }
+
   return (
     <div className="map-wrap">
-      <svg
-        ref={svgRef}
-        width="100%"
-        viewBox="0 0 960 540"
-        style={{ display: 'block' }}
-      />
+      <svg ref={svgRef} width="100%" viewBox="0 0 960 540" style={{ display: 'block' }} />
     </div>
   )
 }
