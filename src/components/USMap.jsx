@@ -3,7 +3,10 @@ import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 
 function getColor(data, threshold, name, selectedState) {
-  if (name === selectedState) return '#439B47'
+  if (name === selectedState) {
+    if (!data || data.count < threshold) return 'transparent'
+    return '#439B47'
+  }
   if (!data || data.count < threshold) return 'transparent'
   if (data.count < 5)  return '#3a7a20'
   if (data.count < 10) return '#5aaa30'
