@@ -1,5 +1,19 @@
-export default function PlantDetail({ plant, onClose }) {
+import { useState, useEffect } from 'react'
+import SpotifyPlayer from './SpotifyEmbed'
+
+export default function PlantDetail({ api, plant, onClose }) {
+  const [spotifyTrackIds, setSpotifyTrackIds] = useState({})
+  const [loadingSpotify, setLoadingSpotify] = useState(false)
+
   if (!plant) return null
+
+  const searchSpotifyTrack = async (title, artist) => {
+    console.log(title + " " + artist);
+    let rawResults = await api.search(title + " " + artist, ["track"], undefined, 10, 0);
+    let tracks = rawResults.tracks.items;
+    return tracks[0].id;
+  }
+
 
   const songs = plant.songs || [{
     title: plant.song_title,
@@ -7,6 +21,27 @@ export default function PlantDetail({ plant, onClose }) {
     year: plant.year,
     fragment: plant.lyric_fragment || ''
   }]
+
+  // Search for Spotify tracks when component mounts
+  useEffect(() => {
+    const searchAllTracks = async () => {
+      setLoadingSpotify(true)
+      const trackIds = {}
+
+      for (let i = 0; i < songs.length; i++) {
+        const song = songs[i]
+        const trackId = await searchSpotifyTrack(song.title, song.artist)
+        if (trackId) {
+          trackIds[i] = trackId
+        }
+      }
+
+      setSpotifyTrackIds(trackIds)
+      setLoadingSpotify(false)
+    }
+
+    searchAllTracks()
+  }, [songs])
 
   return (
     <div className="detail-overlay" onClick={onClose}>
@@ -65,15 +100,18 @@ export default function PlantDetail({ plant, onClose }) {
           </div>
           <div className="detail-songs">
             {songs.map((s, i) => (
-              <div key={i} className="detail-song-row">
-                <div className="detail-song-title">
-                  "{s.title}"
-                  {s.year && <span className="detail-song-year"> · {s.year}</span>}
+              <div key={i} className="detail-song-row" style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div className="detail-song-title" >
+                    "{s.title}"
+                    {s.year && <span className="detail-song-year"> · {s.year}</span>}
+                  </div>
+                  {s.artist && <div className="detail-song-artist">{s.artist}</div>}
+                  {s.fragment && (
+                    <div className="detail-lyric-fragment">"{s.fragment}"</div>
+                  )}
                 </div>
-                {s.artist && <div className="detail-song-artist">{s.artist}</div>}
-                {s.fragment && (
-                  <div className="detail-lyric-fragment">"{s.fragment}"</div>
-                )}
+                <SpotifyPlayer trackId={spotifyTrackIds[i]} />
               </div>
             ))}
           </div>

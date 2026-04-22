@@ -1,8 +1,23 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import USMap from './components/USMap'
 import RightPanel from './components/RightPanel'
 import PlantDetail from './components/PlantDetail'
 import rawData from './data/plants.json'
+
+// Spotify authentication setup
+
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+
+const CLIENT_ID = "9e29c53b00154bdcaade5e8d1652891b";
+const REDIRECT_URI = "https://bluegrass-map.vercel.app/";
+
+const API = SpotifyApi.withUserAuthorization(CLIENT_ID, REDIRECT_URI);
+const auth = async () => {
+  await API.authenticate();
+}
+auth();
+
+// end spotify setup
 
 const DATA_YEAR_MIN = 1962
 const DATA_YEAR_MAX = 2026
@@ -13,9 +28,9 @@ const ALL_PLANTS = (() => {
     const key = entry.plant_scientific || entry.plant_common
     if (!map[key]) map[key] = { ...entry, songs: [] }
     map[key].songs.push({
-      title:    entry.song_title,
-      artist:   entry.artist,
-      year:     entry.year,
+      title: entry.song_title,
+      artist: entry.artist,
+      year: entry.year,
       fragment: entry.lyric_fragment || ''
     })
   })
@@ -23,14 +38,27 @@ const ALL_PLANTS = (() => {
 })()
 
 export default function App() {
-  const [threshold, setThreshold]         = useState(5)
-  const [yearRange, setYearRange]         = useState([1970, 2000])
+  const [threshold, setThreshold] = useState(5)
+  const [yearRange, setYearRange] = useState([1970, 2000])
   const [includeNoYear, setIncludeNoYear] = useState(true)
   const [selectedState, setSelectedState] = useState(null)
   const [selectedPlant, setSelectedPlant] = useState(null)
   const [enabledPlants, setEnabledPlants] = useState(
     () => new Set(ALL_PLANTS.map(p => p.plant_scientific || p.plant_common))
   )
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (code) {
+      // Clean the code out of the URL so it doesn't get reused on refresh
+      window.history.replaceState({}, '', window.location.pathname);
+      exchangeCodeForToken(code).then(() => {
+        // token is now stored, app can proceed normally
+      });
+    }
+  }, []);
 
   const filteredData = useMemo(() => {
     return rawData.filter(d => {
@@ -72,19 +100,19 @@ export default function App() {
     })
   }, [yearRange, includeNoYear, selectedState])
 
-const occurrenceCoords = useMemo(() => {
-  const seen = new Set()
-  const coords = []
-  filteredData.forEach(entry => {
-    const key = entry.plant_scientific || entry.plant_common
-    if (seen.has(key)) return
-    seen.add(key)
-    const plant = ALL_PLANTS.find(p => (p.plant_scientific || p.plant_common) === key)
-    if (!plant?.occurrence_coords) return
-    plant.occurrence_coords.forEach(c => coords.push(c))
-  })
-  return coords
-}, [filteredData])
+  const occurrenceCoords = useMemo(() => {
+    const seen = new Set()
+    const coords = []
+    filteredData.forEach(entry => {
+      const key = entry.plant_scientific || entry.plant_common
+      if (seen.has(key)) return
+      seen.add(key)
+      const plant = ALL_PLANTS.find(p => (p.plant_scientific || p.plant_common) === key)
+      if (!plant?.occurrence_coords) return
+      plant.occurrence_coords.forEach(c => coords.push(c))
+    })
+    return coords
+  }, [filteredData])
 
   const handleTogglePlant = (key) => {
     setEnabledPlants(prev => {
@@ -141,6 +169,7 @@ const occurrenceCoords = useMemo(() => {
 
       {selectedPlant && (
         <PlantDetail
+          api={API}
           plant={selectedPlant}
           onClose={() => setSelectedPlant(null)}
         />

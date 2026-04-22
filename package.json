@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@spotify/web-api-ts-sdk": "^1.2.0",
     "d3": "^7.9.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -25,5 +26,6 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "vite": "^8.0.1"
-  }
+  },
+  "proxy": "http://127.0.0.1:5137/"
 }
