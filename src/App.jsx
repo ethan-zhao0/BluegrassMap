@@ -72,9 +72,19 @@ export default function App() {
     })
   }, [yearRange, includeNoYear, selectedState])
 
-  const occurrenceCoords = useMemo(() => {
-    return selectedPlant?.occurrence_coords || []
-  }, [selectedPlant])
+const occurrenceCoords = useMemo(() => {
+  const seen = new Set()
+  const coords = []
+  filteredData.forEach(entry => {
+    const key = entry.plant_scientific || entry.plant_common
+    if (seen.has(key)) return
+    seen.add(key)
+    const plant = ALL_PLANTS.find(p => (p.plant_scientific || p.plant_common) === key)
+    if (!plant?.occurrence_coords) return
+    plant.occurrence_coords.forEach(c => coords.push(c))
+  })
+  return coords
+}, [filteredData])
 
   const handleTogglePlant = (key) => {
     setEnabledPlants(prev => {
