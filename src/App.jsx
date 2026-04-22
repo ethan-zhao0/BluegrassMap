@@ -7,89 +7,83 @@ import rawData from './data/plants.json'
 const DATA_YEAR_MIN = 1962
 const DATA_YEAR_MAX = 2026
 
+const ALL_PLANTS = (() => {
+  const map = {}
+  rawData.forEach(entry => {
+    const key = entry.plant_scientific || entry.plant_common
+    if (!map[key]) map[key] = { ...entry, songs: [] }
+    map[key].songs.push({
+      title:    entry.song_title,
+      artist:   entry.artist,
+      year:     entry.year,
+      fragment: entry.lyric_fragment || ''
+    })
+  })
+  return Object.values(map)
+})()
+
 export default function App() {
-  const [threshold, setThreshold] = useState(5)
-  const [yearRange, setYearRange] = useState([1970, 2000])
+  const [threshold, setThreshold]         = useState(5)
+  const [yearRange, setYearRange]         = useState([1970, 2000])
   const [includeNoYear, setIncludeNoYear] = useState(true)
   const [selectedState, setSelectedState] = useState(null)
   const [selectedPlant, setSelectedPlant] = useState(null)
   const [enabledPlants, setEnabledPlants] = useState(
-    new Set(rawData.map(d => d.plant_scientific))
+    () => new Set(ALL_PLANTS.map(p => p.plant_scientific || p.plant_common))
   )
 
   const filteredData = useMemo(() => {
     return rawData.filter(d => {
-      // Check if plant is enabled
-      if (!enabledPlants.has(d.plant_scientific)) return false
-      // Check year filters
       if (d.year === null || d.year === undefined) return includeNoYear
       return d.year >= yearRange[0] && d.year <= yearRange[1]
     })
-  }, [yearRange, includeNoYear, enabledPlants])
+  }, [yearRange, includeNoYear])
 
   const stateData = useMemo(() => {
     const map = {}
     filteredData.forEach(entry => {
+      const key = entry.plant_scientific || entry.plant_common
+      if (!enabledPlants.has(key)) return
       Object.keys(entry.states || {}).forEach(state => {
-        const occurrenceCount = entry.states[state]
-        // if (occurrenceCount < 15) return  // skip if fewer than 10 recorded observations
         if (!map[state]) map[state] = { count: 0, entries: [] }
-        map[state].count += 1
-        map[state].entries.push(entry)
+        const alreadyCounted = map[state].entries.some(
+          e => (e.plant_scientific || e.plant_common) === key
+        )
+        if (!alreadyCounted) {
+          map[state].count += 1
+          map[state].entries.push(entry)
+        }
       })
     })
     return map
-  }, [filteredData, includeNoYear])
+  }, [filteredData, enabledPlants])
 
-  const togglePlant = (scientificName) => {
-    setEnabledPlants(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(scientificName)) {
-        newSet.delete(scientificName)
-      } else {
-        newSet.add(scientificName)
-      }
-      return newSet
-    })
-  }
-
-  const enableAllPlants = () => {
-    setEnabledPlants(new Set(rawData.map(d => d.plant_scientific)))
-  }
-
-  const disableAllPlants = () => {
-    setEnabledPlants(new Set())
-  }
-
-  const panelEntries = useMemo(() => {
-    if (selectedState) return stateData[selectedState]?.entries || []
-    return filteredData
-  }, [selectedState, stateData, filteredData])
-
-  const allPlants = useMemo(() => {
-    const grouped = {}
-    rawData.forEach(e => {
-      const key = e.plant_scientific || e.plant_common
-      if (!grouped[key]) grouped[key] = { ...e, songs: [] }
-      grouped[key].songs.push({
-        title: e.song_title,
-        artist: e.artist,
-        year: e.year,
-        fragment: e.lyric_fragment || ''
+  const visiblePlants = useMemo(() => {
+    return ALL_PLANTS.filter(p => {
+      const hasMatchingSong = p.songs.some(s => {
+        if (s.year === null || s.year === undefined) return includeNoYear
+        return s.year >= yearRange[0] && s.year <= yearRange[1]
       })
+      if (!hasMatchingSong) return false
+      if (selectedState) {
+        return p.states && p.states[selectedState] !== undefined
+      }
+      return true
     })
-    return Object.values(grouped)
-  }, [])
+  }, [yearRange, includeNoYear, selectedState])
 
   const occurrenceCoords = useMemo(() => {
-    const coords = []
-    allPlants.forEach(plant => {
-      if (enabledPlants.has(plant.plant_scientific) && plant.occurrence_coords) {
-        coords.push(...plant.occurrence_coords)
-      }
+    return selectedPlant?.occurrence_coords || []
+  }, [selectedPlant])
+
+  const handleTogglePlant = (key) => {
+    setEnabledPlants(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
     })
-    return coords
-  }, [allPlants, enabledPlants])
+  }
 
   return (
     <div className="layout">
@@ -116,8 +110,7 @@ export default function App() {
 
       <div className="right-panel">
         <RightPanel
-          allPlants={allPlants}
-          entries={panelEntries}
+          visiblePlants={visiblePlants}
           selectedState={selectedState}
           threshold={threshold}
           setThreshold={setThreshold}
@@ -130,10 +123,9 @@ export default function App() {
           onPlantClick={setSelectedPlant}
           selectedPlant={selectedPlant}
           enabledPlants={enabledPlants}
-          setEnabledPlants={setEnabledPlants}
-          onTogglePlant={togglePlant}
-          onEnableAll={enableAllPlants}
-          onDisableAll={disableAllPlants}
+          onTogglePlant={handleTogglePlant}
+          onEnableAll={() => setEnabledPlants(new Set(ALL_PLANTS.map(p => p.plant_scientific || p.plant_common)))}
+          onDisableAll={() => setEnabledPlants(new Set())}
         />
       </div>
 

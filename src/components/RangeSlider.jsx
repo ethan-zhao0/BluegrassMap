@@ -1,9 +1,11 @@
 import { useRef, useCallback } from 'react'
 
+const THUMB = 16
+
 export default function RangeSlider({ min, max, value, onChange }) {
   const [lo, hi] = value
   const trackRef = useRef(null)
-  const dragRef  = useRef(null) // { type: 'lo'|'hi'|'range', startX, startLo, startHi }
+  const dragRef  = useRef(null)
 
   const toVal = useCallback((clientX) => {
     const rect = trackRef.current.getBoundingClientRect()
@@ -19,15 +21,11 @@ export default function RangeSlider({ min, max, value, onChange }) {
       const d = dragRef.current
       if (!d) return
       const range = max - min
-
       if (d.type === 'lo') {
-        const newLo = Math.min(toVal(ev.clientX), d.startHi - 1)
-        onChange([Math.max(min, newLo), d.startHi])
+        onChange([Math.max(min, Math.min(toVal(ev.clientX), d.startHi - 1)), d.startHi])
       } else if (d.type === 'hi') {
-        const newHi = Math.max(toVal(ev.clientX), d.startLo + 1)
-        onChange([d.startLo, Math.min(max, newHi)])
+        onChange([d.startLo, Math.min(max, Math.max(toVal(ev.clientX), d.startLo + 1))])
       } else {
-        // drag whole range
         const dx    = ev.clientX - d.startX
         const rect  = trackRef.current.getBoundingClientRect()
         const delta = Math.round((dx / rect.width) * range)
@@ -45,28 +43,27 @@ export default function RangeSlider({ min, max, value, onChange }) {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseup', onUp)
     }
-
     window.addEventListener('mousemove', onMove)
     window.addEventListener('mouseup', onUp)
   }
 
-  const loPct = ((lo - min) / (max - min) * 100).toFixed(1)
-  const hiPct = ((hi - min) / (max - min) * 100).toFixed(1)
+  const loPct = (lo - min) / (max - min)
+  const hiPct = (hi - min) / (max - min)
+  const loLeft     = `calc(${loPct * 100}% - ${loPct * THUMB}px)`
+  const hiLeft     = `calc(${hiPct * 100}% - ${hiPct * THUMB}px)`
+  const activeLeft  = `calc(${loPct * 100}% - ${loPct * THUMB}px + ${THUMB / 2}px)`
+  const activeRight = `calc(${(1 - hiPct) * 100}% - ${(1 - hiPct) * THUMB}px + ${THUMB / 2}px)`
 
-return (
-  <div
-    className="range-track-wrap"
-    ref={trackRef}
-    style={{ width: '100%', left: 0 }}
-  >
-    <div className="range-inactive" style={{ left: 0, right: 0 }} />
-    <div
-      className="range-active"
-      style={{ left: loPct + '%', width: (hiPct - loPct) + '%' }}
-      onMouseDown={onMouseDown('range')}
-    />
-    <div className="range-thumb" style={{ left: loPct + '%' }} onMouseDown={onMouseDown('lo')} />
-    <div className="range-thumb" style={{ left: hiPct + '%' }} onMouseDown={onMouseDown('hi')} />
-  </div>
-)
+  return (
+    <div className="range-track-wrap" ref={trackRef} style={{ width: '100%' }}>
+      <div className="range-inactive" style={{ left: 0, right: 0 }} />
+      <div
+        className="range-active"
+        style={{ left: activeLeft, right: activeRight }}
+        onMouseDown={onMouseDown('range')}
+      />
+      <div className="range-thumb" style={{ left: loLeft }} onMouseDown={onMouseDown('lo')} />
+      <div className="range-thumb" style={{ left: hiLeft }} onMouseDown={onMouseDown('hi')} />
+    </div>
+  )
 }

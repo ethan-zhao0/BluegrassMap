@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import RangeSlider from './RangeSlider'
 
 function sliderBg(val, min, max) {
@@ -7,52 +6,18 @@ function sliderBg(val, min, max) {
 }
 
 export default function RightPanel({
-  allPlants, entries, selectedState,
+  visiblePlants,
+  selectedState,
   threshold, setThreshold,
   yearRange, setYearRange,
   yearMin, yearMax,
   includeNoYear, setIncludeNoYear,
   onPlantClick, selectedPlant,
-  enabledPlants, setEnabledPlants, onTogglePlant, onEnableAll, onDisableAll
+  enabledPlants, onTogglePlant, onEnableAll, onDisableAll
 }) {
-  // Use allPlants instead of grouping entries, so disabled plants still show
-  const plants = allPlants || []
-  const [dateFilteredPlants, setDateFilteredPlants] = useState(plants)
-
-  useEffect(() => {
-    const filteredPlants = plants.filter(p => {
-      const hasYearInRange = p.songs.some(s => s.year && s.year >= yearRange[0] && s.year <= yearRange[1])
-      const hasNoYear = p.songs.some(s => !s.year)
-      return hasYearInRange || (includeNoYear && hasNoYear)
-    })
-    setDateFilteredPlants(filteredPlants)
-  }, [plants, yearRange, includeNoYear])
-
-  // Further filter by selected state
-  const stateAndDateFilteredPlants = dateFilteredPlants.filter(p => {
-    if (!selectedState) return true
-    // Check if plant has this state in its states dictionary
-    return p.states && p.states[selectedState] && p.states[selectedState] > 0
-  })
-
-  // Auto-disable plants not in the filtered list, preserve manual toggle state for visible plants
-  useEffect(() => {
-    const visiblePlantScientificNames = new Set(stateAndDateFilteredPlants.map(p => p.plant_scientific))
-    setEnabledPlants(prev => {
-      const newSet = new Set()
-      // Keep only visible plants that were enabled
-      prev.forEach(plant => {
-        if (visiblePlantScientificNames.has(plant)) {
-          newSet.add(plant)
-        }
-      })
-      return newSet
-    })
-  }, [stateAndDateFilteredPlants, setEnabledPlants])
-
   return (
     <div className="panel">
-      {/* threshold slider */}
+
       <div className="panel-section">
         <div className="panel-label">
           Min. plants per state — <span style={{ color: '#c8e870' }}>{threshold} species</span>
@@ -67,7 +32,6 @@ export default function RightPanel({
         />
       </div>
 
-      {/* year range slider */}
       <div className="panel-section">
         <div className="panel-label">
           Year range — <span style={{ color: '#c8e870' }}>{yearRange[0]} – {yearRange[1]}</span>
@@ -91,128 +55,68 @@ export default function RightPanel({
         </label>
       </div>
 
-      {/* plant count label */}
-      <div className="panel-label" style={{ padding: '10px 16px 6px' }}>
-        {selectedState
-          ? `Plants in ${selectedState} in Date Range (${stateAndDateFilteredPlants.length})`
-          : `Plants in Date Range (${dateFilteredPlants.length})`}
+      <div className="panel-section" style={{ padding: '8px 16px' }}>
+        <div className="panel-label" style={{ marginBottom: 6 }}>
+          {selectedState
+            ? `Plants in ${selectedState} (${visiblePlants.length})`
+            : `All plants (${visiblePlants.length})`}
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button className="toggle-btn toggle-btn--on" onClick={onEnableAll}>Enable all</button>
+          <button className="toggle-btn toggle-btn--off" onClick={onDisableAll}>Disable all</button>
+        </div>
       </div>
 
-      {/* enable/disable all buttons */}
-      <div style={{ display: 'flex', gap: '8px', padding: '8px 16px' }}>
-        <button
-          onClick={onEnableAll}
-          style={{
-            flex: 1,
-            padding: '6px 12px',
-            background: '#8acc50',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}
-        >
-          Enable All
-        </button>
-        <button
-          onClick={onDisableAll}
-          style={{
-            flex: 1,
-            padding: '6px 12px',
-            background: '#3a7a20',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px',
-            fontWeight: 'bold'
-          }}
-        >
-          Disable All
-        </button>
-      </div>
-
-      {/* plant list */}
       <div className="plant-scroll">
-        {stateAndDateFilteredPlants.length === 0 && (
+        {visiblePlants.length === 0 && (
           <div className="empty-msg">No plants match current filters</div>
         )}
-        {stateAndDateFilteredPlants.map((p, i) => {
+        {visiblePlants.map((p, i) => {
+          const key        = p.plant_scientific || p.plant_common
           const isSelected = selectedPlant?.plant_scientific === p.plant_scientific
-          const isEnabled = enabledPlants.has(p.plant_scientific)
+          const isEnabled  = enabledPlants.has(key)
           return (
             <div
               key={i}
-              className={`plant-card ${isSelected ? 'plant-card--selected' : ''}`}
-              style={{
-                background: isSelected ? '#c8e870' : '#2a4a1a',
-                gap: '12px',
-                padding: '12px',
-                opacity: isEnabled ? 1 : 0.5,
-                cursor: isEnabled ? 'pointer' : 'pointer',
-                // visibility: "hidden"
-              }}
-              onClick={() => {
-                if (isEnabled) onPlantClick(isSelected ? null : p)
-              }}
+              className={`plant-card ${isSelected ? 'plant-card--selected' : ''} ${!isEnabled ? 'plant-card--disabled' : ''}`}
+              onClick={() => onPlantClick(isSelected ? null : p)}
             >
-              {/* Checkbox */}
               <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: '2px',
-                  flexShrink: 0
-                }}
-                onClick={e => {
-                  e.stopPropagation()
-                  onTogglePlant(p.plant_scientific)
-                }}
+                className="plant-toggle"
+                onClick={e => { e.stopPropagation(); onTogglePlant(key) }}
               >
                 <input
                   type="checkbox"
                   checked={isEnabled}
-                  onChange={() => { }}
-                  style={{
-                    cursor: 'pointer',
-                    width: '18px',
-                    height: '18px',
-                    accentColor: '#8acc50'
-                  }}
+                  onChange={() => {}}
+                  style={{ cursor: 'pointer', width: 16, height: 16, accentColor: '#8acc50' }}
                 />
               </div>
 
-              {/* Content wrapper */}
-              <div style={{ display: 'flex', flexDirection: 'row', minWidth: 0, gap: 10, alignItems: 'center' }}>
-                {p.images?.[0]?.url && (
-                  <div className="plant-thumb-wrap">
-                    <img
-                      src={p.images[0].url}
-                      alt={p.plant_common}
-                      className="plant-thumb"
-                      onError={e => { e.target.style.display = 'none' }}
-                    />
-                  </div>
-                )}
-                <div className="plant-card-body">
-                  <div className="plant-name">{p.plant_common}</div>
-                  <div className="plant-sci">{p.plant_scientific}</div>
-                  <div className="plant-meta-row">
-                    {p.growth_habit && (
-                      <span className="badge badge--habit">{p.growth_habit}</span>
-                    )}
-                    {p.native_status && (
-                      <span className={`badge badge--${p.native_status === 'Native' ? 'native' : 'introduced'}`}>
-                        {p.native_status}
-                      </span>
-                    )}
-                  </div>
-                  <div className="plant-songs-count">
-                    {p.songs.length} song{p.songs.length !== 1 ? 's' : ''}
-                  </div>
+              {p.images?.[0]?.url && (
+                <div className="plant-thumb-wrap">
+                  <img
+                    src={p.images[0].url}
+                    alt={p.plant_common}
+                    className="plant-thumb"
+                    onError={e => { e.target.style.display = 'none' }}
+                  />
+                </div>
+              )}
+
+              <div className="plant-card-body">
+                <div className="plant-name">{p.plant_common}</div>
+                <div className="plant-sci">{p.plant_scientific}</div>
+                <div className="plant-meta-row">
+                  {p.growth_habit && <span className="badge badge--habit">{p.growth_habit}</span>}
+                  {p.native_status && (
+                    <span className={`badge badge--${p.native_status === 'Native' ? 'native' : 'introduced'}`}>
+                      {p.native_status}
+                    </span>
+                  )}
+                </div>
+                <div className="plant-songs-count">
+                  {p.songs.length} song{p.songs.length !== 1 ? 's' : ''}
                 </div>
               </div>
             </div>

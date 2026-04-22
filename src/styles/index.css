@@ -29,21 +29,27 @@ body { background: #1a3010; overflow: hidden; }
 .panel-section { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.07); flex-shrink: 0; }
 .panel-label { font-size: 10px; color: #8acc50; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
 
-/* sliders */
-.range-track-wrap { position: relative; height: 20px; display: flex; align-items: center; width: 100%; margin: 4px 0; }
-.range-inactive { position: absolute; height: 5px; background: #2a4a1a; border-radius: 3px; left: 0; right: 0; }
-.range-active { position: absolute; height: 5px; background: #8acc50; border-radius: 3px; cursor: grab; min-width: 4px; }
-.range-active:active { cursor: grabbing; }
-.range-thumb { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #8acc50; border: 2px solid #152808; box-shadow: 0 0 0 1.5px #8acc50; transform: translateX(-50%); cursor: grab; z-index: 2; }
-.range-thumb:active { cursor: grabbing; }
-.year-ends { display: flex; justify-content: space-between; font-size: 11px; color: #7a9a50; margin-top: 4px; }
-
-.no-year-toggle {
-  display: flex; align-items: center; gap: 7px;
-  margin-top: 8px; font-size: 10px; color: #7a9a50;
-  cursor: pointer; user-select: none;
+/* ── sliders ── */
+.range-track-wrap {
+  position: relative; height: 20px; display: flex;
+  align-items: center; width: 100%; margin: 4px 0;
 }
-.no-year-toggle input { accent-color: #8acc50; cursor: pointer; }
+.range-inactive {
+  position: absolute; height: 5px; background: #2a4a1a;
+  border-radius: 3px; left: 0; right: 0;
+}
+.range-active {
+  position: absolute; height: 5px; background: #8acc50;
+  border-radius: 3px; cursor: grab; min-width: 4px;
+}
+.range-active:active { cursor: grabbing; }
+.range-thumb {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  background: #8acc50; border: 2px solid #152808;
+  box-shadow: 0 0 0 1.5px #8acc50;
+  cursor: grab; z-index: 2;
+}
+.range-thumb:active { cursor: grabbing; }
 
 .range-input {
   -webkit-appearance: none; appearance: none;
@@ -60,20 +66,44 @@ body { background: #1a3010; overflow: hidden; }
   background: #8acc50; border: 2px solid #152808; cursor: grab;
 }
 
-/* plant list */
+.year-ends {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #7a9a50; margin-top: 4px;
+}
+.no-year-toggle {
+  display: flex; align-items: center; gap: 7px;
+  margin-top: 8px; font-size: 10px; color: #7a9a50;
+  cursor: pointer; user-select: none;
+}
+.no-year-toggle input { accent-color: #8acc50; cursor: pointer; }
+
+/* ── toggle buttons ── */
+.toggle-btn {
+  flex: 1; padding: 5px 8px; border: none; border-radius: 4px;
+  font-size: 10px; cursor: pointer; letter-spacing: 0.05em;
+}
+.toggle-btn--on  { background: #3a6020; color: #c8e870; }
+.toggle-btn--off { background: #2a3a18; color: #7a9a50; }
+.toggle-btn:hover { opacity: 0.85; }
+
+/* ── plant list ── */
 .plant-scroll { flex: 1; overflow-y: auto; padding: 8px 0; }
 .plant-scroll::-webkit-scrollbar { width: 3px; }
 .plant-scroll::-webkit-scrollbar-track { background: transparent; }
 .plant-scroll::-webkit-scrollbar-thumb { background: #3a6020; border-radius: 2px; }
 
 .plant-card {
-  display: flex; gap: 10px;
-  padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; gap: 10px; align-items: center;
+  padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
   cursor: pointer; transition: background 0.15s;
 }
 .plant-card:hover { background: rgba(255,255,255,0.04); }
 .plant-card--selected { background: rgba(138,204,80,0.1); border-left: 2px solid #8acc50; }
+.plant-card--disabled { opacity: 0.4; }
 
+.plant-toggle {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
 .plant-thumb-wrap { flex-shrink: 0; width: 44px; height: 44px; border-radius: 4px; overflow: hidden; }
 .plant-thumb { width: 100%; height: 100%; object-fit: cover; }
 
@@ -83,7 +113,7 @@ body { background: #1a3010; overflow: hidden; }
 .plant-meta-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
 .plant-songs-count { font-size: 10px; color: #5a7a40; margin-top: 3px; }
 
-/* badges */
+/* ── badges ── */
 .badge { font-size: 9px; padding: 2px 6px; border-radius: 3px; font-style: normal; }
 .badge--habit      { background: rgba(255,255,255,0.08); color: #a0c870; }
 .badge--native     { background: rgba(67,155,71,0.25);   color: #8acc50; }
@@ -131,9 +161,22 @@ body { background: #1a3010; overflow: hidden; }
 .detail-song-title  { font-size: 12px; color: #a0c870; }
 .detail-song-year   { color: #5a7a40; font-size: 11px; }
 .detail-song-artist { font-size: 10px; color: #5a7a40; }
-.detail-lyric-fragment { font-size: 10px; color: #6a8a50; font-style: italic; margin-top: 2px; line-height: 1.5; border-left: 2px solid #2a4a1a; padding-left: 6px; }
+.detail-lyric-fragment {
+  font-size: 10px; color: #6a8a50; font-style: italic;
+  margin-top: 2px; line-height: 1.5;
+  border-left: 2px solid #2a4a1a; padding-left: 6px;
+}
 
 .detail-states { display: flex; flex-direction: column; gap: 4px; }
 .detail-state-row { display: flex; justify-content: space-between; font-size: 11px; }
 .detail-state-name  { color: #a0c870; }
 .detail-state-count { color: #5a7a40; }
+
+.map-tooltip {
+  position: absolute; pointer-events: none;
+  background: #0e2008; border: 1px solid rgba(138,204,80,0.3);
+  padding: 7px 11px; border-radius: 4px; z-index: 30;
+  font-family: Georgia, serif;
+}
+.map-tooltip-name  { font-size: 13px; color: #c8e870; font-weight: 500; }
+.map-tooltip-count { font-size: 11px; color: #7a9a50; margin-top: 2px; font-style: italic; }
