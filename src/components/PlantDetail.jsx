@@ -1,7 +1,6 @@
 export default function PlantDetail({ plant, onClose }) {
   if (!plant) return null
 
-  const grouped = {}
   const songs = plant.songs || [{
     title: plant.song_title,
     artist: plant.artist,

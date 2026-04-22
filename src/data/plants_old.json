@@ -1125,8 +1125,7 @@
       "Virginia": 43,
       "Washington": 14,
       "West Virginia": 29,
-      "Wisconsin": 255,
-      "Georgia": 1
+      "Wisconsin": 255
     },
     "gbif_key": 5361880,
     "family": "Cannabaceae",
@@ -2216,9 +2215,7 @@
       "Vermont": 12,
       "Virginia": 151,
       "West Virginia": 57,
-      "Wisconsin": 94,
-      "Washington": 2,
-      "Pennsylvania": 5
+      "Wisconsin": 94
     },
     "gbif_key": 7795888,
     "family": "Poaceae",
@@ -3308,9 +3305,7 @@
       "Virginia": 14,
       "Washington": 11,
       "West Virginia": 8,
-      "Wisconsin": 25,
-      "British Columbia": 1,
-      "District of Columbia": 1
+      "Wisconsin": 25
     },
     "gbif_key": 3034646,
     "family": "Apiaceae",
@@ -7655,8 +7650,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -8741,8 +8735,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -9830,8 +9823,7 @@
       "Virginia": 132,
       "Washington": 27,
       "West Virginia": 25,
-      "Wisconsin": 43,
-      "District of Columbia": 1
+      "Wisconsin": 43
     },
     "gbif_key": 5372639,
     "family": "Salicaceae",
@@ -20633,8 +20625,7 @@
       "Virginia": 1510,
       "Washington": 7,
       "West Virginia": 609,
-      "Wisconsin": 4293,
-      "District of Columbia": 1
+      "Wisconsin": 4293
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -21719,8 +21710,7 @@
       "Virginia": 1510,
       "Washington": 7,
       "West Virginia": 609,
-      "Wisconsin": 4293,
-      "District of Columbia": 1
+      "Wisconsin": 4293
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -22776,8 +22766,7 @@
       "South Carolina": 2,
       "Texas": 4,
       "Virginia": 1,
-      "Washington": 3,
-      "New York": 13
+      "Washington": 3
     },
     "gbif_key": 2703912,
     "family": "Poaceae",
@@ -24246,8 +24235,7 @@
       "Virginia": 1510,
       "Washington": 7,
       "West Virginia": 609,
-      "Wisconsin": 4293,
-      "District of Columbia": 1
+      "Wisconsin": 4293
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -27488,9 +27476,7 @@
       "Texas": 67,
       "Vermont": 154,
       "West Virginia": 331,
-      "Wisconsin": 638,
-      "Virginia": 47,
-      "Indiana": 5
+      "Wisconsin": 638
     },
     "gbif_key": 3006171,
     "family": "Rosaceae",
@@ -28571,9 +28557,7 @@
       "Washington": 1,
       "West Virginia": 1090,
       "Wisconsin": 1457,
-      "Wyoming": 2,
-      "Indiana": 11,
-      "District of Columbia": 1
+      "Wyoming": 2
     },
     "gbif_key": 5341242,
     "family": "Boraginaceae",
@@ -29657,8 +29641,7 @@
       "Washington": 1,
       "West Virginia": 1090,
       "Wisconsin": 1457,
-      "Wyoming": 2,
-      "District of Columbia": 1
+      "Wyoming": 2
     },
     "gbif_key": 5341242,
     "family": "Boraginaceae",
@@ -30743,8 +30726,7 @@
       "Virginia": 1512,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4293,
-      "District of Columbia": 1
+      "Wisconsin": 4293
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -33994,8 +33976,7 @@
       "Washington": 387,
       "West Virginia": 167,
       "Wisconsin": 1286,
-      "Wyoming": 38,
-      "District of Columbia": 1
+      "Wyoming": 38
     },
     "gbif_key": 5341499,
     "family": "Lamiaceae",
@@ -36187,8 +36168,7 @@
       "Washington": 387,
       "West Virginia": 167,
       "Wisconsin": 1286,
-      "Wyoming": 38,
-      "District of Columbia": 1
+      "Wyoming": 38
     },
     "gbif_key": 5341499,
     "family": "Lamiaceae",
@@ -37273,8 +37253,7 @@
       "Virginia": 1512,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4293,
-      "District of Columbia": 1
+      "Wisconsin": 4293
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -40525,9 +40504,7 @@
       "Virginia": 45,
       "Washington": 8,
       "West Virginia": 6,
-      "Wisconsin": 14,
-      "South Carolina": 2,
-      "Utah": 1
+      "Wisconsin": 14
     },
     "gbif_key": 2874621,
     "family": "Cucurbitaceae",
@@ -41602,9 +41579,7 @@
       "Utah": 3,
       "Virginia": 15,
       "Washington": 3,
-      "Wisconsin": 2,
-      "South Carolina": 4,
-      "California": 2
+      "Wisconsin": 2
     },
     "gbif_key": 3152661,
     "family": "Malvaceae",
@@ -42684,10 +42659,7 @@
       "Vermont": 155,
       "Virginia": 1286,
       "West Virginia": 331,
-      "Wisconsin": 649,
-      "Indiana": 5,
-      "Arkansas": 32,
-      "Missouri": 10
+      "Wisconsin": 649
     },
     "gbif_key": 3006171,
     "family": "Rosaceae",
@@ -47022,9 +46994,7 @@
       "Texas": 2,
       "Virginia": 882,
       "Washington": 3,
-      "West Virginia": 640,
-      "Georgia": 37,
-      "Ohio": 7
+      "West Virginia": 640
     },
     "gbif_key": 2882708,
     "family": "Ericaceae",
@@ -48108,9 +48078,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "Kentucky": 1,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -49183,11 +49151,7 @@
       "Vermont": 157,
       "Washington": 1,
       "West Virginia": 226,
-      "Wisconsin": 930,
-      "New Jersey": 21,
-      "Maryland": 11,
-      "Virginia": 9,
-      "Kentucky": 2
+      "Wisconsin": 930
     },
     "gbif_key": 2882739,
     "family": "Ericaceae",
@@ -53542,9 +53506,7 @@
       "Vermont": 155,
       "Virginia": 1286,
       "West Virginia": 331,
-      "Wisconsin": 649,
-      "Ohio": 10,
-      "New York": 3
+      "Wisconsin": 649
     },
     "gbif_key": 3006171,
     "family": "Rosaceae",
@@ -54629,8 +54591,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -60061,8 +60022,7 @@
       "Virginia": 4335,
       "Washington": 50,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -61153,8 +61113,7 @@
       "Virginia": 637,
       "Washington": 11,
       "West Virginia": 147,
-      "Wisconsin": 113,
-      "District of Columbia": 2
+      "Wisconsin": 113
     },
     "gbif_key": 2928576,
     "family": "Convolvulaceae",
@@ -63320,8 +63279,7 @@
       "Vermont": 2,
       "Virginia": 3,
       "West Virginia": 5,
-      "Wisconsin": 9,
-      "District of Columbia": 1
+      "Wisconsin": 9
     },
     "gbif_key": 5371699,
     "family": "Ranunculaceae",
@@ -64903,8 +64861,7 @@
       "Washington": 2223,
       "West Virginia": 852,
       "Wisconsin": 3145,
-      "Wyoming": 345,
-      "District of Columbia": 1
+      "Wyoming": 345
     },
     "gbif_key": 8324121,
     "family": "Fabaceae",
@@ -68158,8 +68115,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -69253,8 +69209,7 @@
       "Washington": 2223,
       "West Virginia": 852,
       "Wisconsin": 3145,
-      "Wyoming": 345,
-      "District of Columbia": 1
+      "Wyoming": 345
     },
     "gbif_key": 8324121,
     "family": "Fabaceae",
@@ -72508,8 +72463,7 @@
       "Virginia": 132,
       "Washington": 27,
       "West Virginia": 25,
-      "Wisconsin": 43,
-      "District of Columbia": 1
+      "Wisconsin": 43
     },
     "gbif_key": 5372639,
     "family": "Salicaceae",
@@ -77950,8 +77904,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -79040,8 +78993,7 @@
       "Virginia": 132,
       "Washington": 27,
       "West Virginia": 25,
-      "Wisconsin": 43,
-      "District of Columbia": 1
+      "Wisconsin": 43
     },
     "gbif_key": 5372639,
     "family": "Salicaceae",
@@ -83386,8 +83338,7 @@
       "Virginia": 3483,
       "Washington": 50,
       "West Virginia": 1131,
-      "Wisconsin": 155,
-      "District of Columbia": 3
+      "Wisconsin": 155
     },
     "gbif_key": 3152820,
     "family": "Platanaceae",
@@ -84474,10 +84425,7 @@
       "Virginia": 2103,
       "Washington": 1700,
       "West Virginia": 126,
-      "Wisconsin": 17,
-      "New York": 23,
-      "Oregon": 11,
-      "District of Columbia": 1
+      "Wisconsin": 17
     },
     "gbif_key": 8351737,
     "family": "Araliaceae",
@@ -85563,10 +85511,7 @@
       "Virginia": 2645,
       "Washington": 27,
       "West Virginia": 661,
-      "Wisconsin": 1666,
-      "Illinois": 6,
-      "Missouri": 1,
-      "Minnesota": 1
+      "Wisconsin": 1666
     },
     "gbif_key": 3021850,
     "family": "Rosaceae",
@@ -86652,8 +86597,7 @@
       "Washington": 10,
       "West Virginia": 619,
       "Wisconsin": 1656,
-      "Wyoming": 1,
-      "District of Columbia": 1
+      "Wyoming": 1
     },
     "gbif_key": 2879737,
     "family": "Fagaceae",
@@ -87740,12 +87684,7 @@
       "Virginia": 151,
       "Washington": 194,
       "Wisconsin": 94,
-      "Wyoming": 23,
-      "North Carolina": 11,
-      "Tennessee": 7,
-      "South Carolina": 1,
-      "West Virginia": 1,
-      "New Jersey": 2
+      "Wyoming": 23
     },
     "gbif_key": 7795888,
     "family": "Poaceae",
@@ -88832,13 +88771,7 @@
       "Virginia": 43,
       "Washington": 100,
       "West Virginia": 13,
-      "Wyoming": 6,
-      "Arizona": 6,
-      "Massachusetts": 1,
-      "New Hampshire": 3,
-      "Maine": 1,
-      "District of Columbia": 1,
-      "Montana": 1
+      "Wyoming": 6
     },
     "gbif_key": 2706056,
     "family": "Poaceae",
@@ -89923,9 +89856,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1,
-      "Ohio": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -91010,10 +90941,7 @@
       "Vermont": 3,
       "Virginia": 4335,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "Georgia": 3,
-      "Delaware": 1,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -92103,8 +92031,7 @@
       "Virginia": 4335,
       "Washington": 50,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -93190,8 +93117,7 @@
       "Washington": 10,
       "West Virginia": 619,
       "Wisconsin": 1656,
-      "Wyoming": 1,
-      "District of Columbia": 1
+      "Wyoming": 1
     },
     "gbif_key": 2879737,
     "family": "Fagaceae",
@@ -95370,8 +95296,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -96457,8 +96382,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -98634,8 +98558,7 @@
       "Virginia": 4335,
       "Washington": 50,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -99712,8 +99635,7 @@
       "Texas": 133,
       "Virginia": 578,
       "Washington": 2,
-      "West Virginia": 146,
-      "District of Columbia": 1
+      "West Virginia": 146
     },
     "gbif_key": 2977636,
     "family": "Fabaceae",
@@ -101892,9 +101814,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1,
-      "Vermont": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -103027,8 +102947,7 @@
       "Washington": 103,
       "West Virginia": 463,
       "Wisconsin": 969,
-      "Wyoming": 1,
-      "District of Columbia": 1
+      "Wyoming": 1
     },
     "gbif_key": 3054357,
     "family": "Juglandaceae",
@@ -113962,10 +113881,7 @@
       "Texas": 69,
       "Vermont": 155,
       "Virginia": 1286,
-      "West Virginia": 331,
-      "Michigan": 4,
-      "Wisconsin": 3,
-      "Kentucky": 7
+      "West Virginia": 331
     },
     "gbif_key": 3006171,
     "family": "Rosaceae",
@@ -115046,10 +114962,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "Kentucky": 1,
-      "District of Columbia": 1,
-      "Michigan": 6
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -116135,8 +116048,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -117226,8 +117138,7 @@
       "Virginia": 4335,
       "Washington": 50,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -118313,8 +118224,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",
@@ -125895,8 +125805,7 @@
       "Virginia": 4335,
       "Washington": 50,
       "West Virginia": 509,
-      "Wisconsin": 3,
-      "District of Columbia": 4
+      "Wisconsin": 3
     },
     "gbif_key": 5334240,
     "family": "Caprifoliaceae",
@@ -126985,8 +126894,7 @@
       "Virginia": 132,
       "Washington": 27,
       "West Virginia": 25,
-      "Wisconsin": 43,
-      "District of Columbia": 1
+      "Wisconsin": 43
     },
     "gbif_key": 5372639,
     "family": "Salicaceae",
@@ -128072,8 +127980,7 @@
       "Virginia": 1513,
       "Washington": 7,
       "West Virginia": 610,
-      "Wisconsin": 4294,
-      "District of Columbia": 1
+      "Wisconsin": 4294
     },
     "gbif_key": 5284982,
     "family": "Pinaceae",

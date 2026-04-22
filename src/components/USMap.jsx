@@ -5,7 +5,7 @@ import * as topojson from 'topojson-client'
 function getColor(data, threshold, name, selectedState) {
   if (name === selectedState) return '#439B47'
   if (!data || data.count < threshold) return 'transparent'
-  if (data.count < 5)  return '#3a7a20'
+  if (data.count < 5) return '#3a7a20'
   if (data.count < 10) return '#5aaa30'
   if (data.count < 20) return '#8acc50'
   return '#b8e870'
@@ -22,9 +22,9 @@ function getOpacity(name, selectedState) {
 }
 
 export default function USMap({ stateData, threshold, selectedState, occurrenceCoords, onStateClick, onClickOutside }) {
-  const svgRef    = useRef(null)
-  const geoRef    = useRef(null)
-  const projRef   = useRef(null)
+  const svgRef = useRef(null)
+  const geoRef = useRef(null)
+  const projRef = useRef(null)
   const onClickOutsideRef = useRef(onClickOutside)
 
   useEffect(() => { onClickOutsideRef.current = onClickOutside }, [onClickOutside])
@@ -33,7 +33,7 @@ export default function USMap({ stateData, threshold, selectedState, occurrenceC
     fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json')
       .then(r => r.json())
       .then(us => {
-        geoRef.current  = topojson.feature(us, us.objects.states)
+        geoRef.current = topojson.feature(us, us.objects.states)
         projRef.current = d3.geoAlbersUsa().scale(1060).translate([480, 270])
         draw()
       })
@@ -45,7 +45,7 @@ export default function USMap({ stateData, threshold, selectedState, occurrenceC
 
   function draw() {
     if (!geoRef.current || !svgRef.current) return
-    const svg     = d3.select(svgRef.current)
+    const svg = d3.select(svgRef.current)
     const pathGen = d3.geoPath().projection(projRef.current)
 
     svg.selectAll('.bg-rect')
@@ -59,18 +59,18 @@ export default function USMap({ stateData, threshold, selectedState, occurrenceC
       .data(geoRef.current.features)
       .join('path')
       .attr('class', 'state-path')
-      .attr('d',            pathGen)
-      .attr('fill',         d => getColor(stateData[d.properties.name], threshold, d.properties.name, selectedState))
-      .attr('stroke',       d => getStroke(d.properties.name, selectedState))
+      .attr('d', pathGen)
+      .attr('fill', d => getColor(stateData[d.properties.name], threshold, d.properties.name, selectedState))
+      .attr('stroke', d => getStroke(d.properties.name, selectedState))
       .attr('stroke-width', d => getStrokeWidth(d.properties.name, selectedState))
-      .attr('opacity',      d => getOpacity(d.properties.name, selectedState))
+      .attr('opacity', d => getOpacity(d.properties.name, selectedState))
       .attr('cursor', 'pointer')
-      .on('click', function(event, d) {
+      .on('click', function (event, d) {
         event.stopPropagation()
         onStateClick(d.properties.name)
       })
-      .on('mousemove', function(event, d) {
-        const name  = d.properties.name
+      .on('mousemove', function (event, d) {
+        const name = d.properties.name
         const count = stateData[name]?.count || 0
         if (name !== selectedState) {
           d3.select(this).attr('stroke', '#ffffff').attr('stroke-width', 2)
@@ -78,10 +78,10 @@ export default function USMap({ stateData, threshold, selectedState, occurrenceC
         d3.select(this).select('title').remove()
         d3.select(this).append('title').text(`${name} · ${count} plants`)
       })
-      .on('mouseleave', function(event, d) {
+      .on('mouseleave', function (event, d) {
         const name = d.properties.name
         d3.select(this)
-          .attr('stroke',       getStroke(name, selectedState))
+          .attr('stroke', getStroke(name, selectedState))
           .attr('stroke-width', getStrokeWidth(name, selectedState))
       })
   }

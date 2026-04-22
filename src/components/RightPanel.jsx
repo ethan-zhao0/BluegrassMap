@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import RangeSlider from './RangeSlider'
 
 function sliderBg(val, min, max) {
@@ -6,29 +7,30 @@ function sliderBg(val, min, max) {
 }
 
 export default function RightPanel({
-  entries, selectedState,
+  allPlants, entries, selectedState,
   threshold, setThreshold,
   yearRange, setYearRange,
   yearMin, yearMax,
   includeNoYear, setIncludeNoYear,
-  onPlantClick, selectedPlant
+  onPlantClick, selectedPlant,
+  enabledPlants, setEnabledPlants, onTogglePlant, onEnableAll, onDisableAll
 }) {
-  const grouped = {}
-  entries.forEach(e => {
-    const key = e.plant_scientific || e.plant_common
-    if (!grouped[key]) grouped[key] = { ...e, songs: [] }
-    grouped[key].songs.push({
-      title:    e.song_title,
-      artist:   e.artist,
-      year:     e.year,
-      fragment: e.lyric_fragment || ''
+  // Use allPlants instead of grouping entries, so disabled plants still show
+  const plants = allPlants || []
+  const [dateFilteredPlants, setDateFilteredPlants] = useState(plants)
+
+  useEffect(() => {
+    const filteredPlants = plants.filter(p => {
+      const hasYearInRange = p.songs.some(s => s.year && s.year >= yearRange[0] && s.year <= yearRange[1])
+      const hasNoYear = p.songs.some(s => !s.year)
+      return hasYearInRange || (includeNoYear && hasNoYear)
     })
-  })
-  const plants = Object.values(grouped)
+    setDateFilteredPlants(filteredPlants)
+    setEnabledPlants(filteredPlants.reduce((set, p) => set.add(p.plant_scientific), new Set()));
+  }, [plants, yearRange, includeNoYear])
 
   return (
     <div className="panel">
-
       {/* threshold slider */}
       <div className="panel-section">
         <div className="panel-label">
@@ -72,47 +74,124 @@ export default function RightPanel({
       <div className="panel-label" style={{ padding: '10px 16px 6px' }}>
         {selectedState
           ? `Plants in ${selectedState} (${plants.length})`
-          : `All plants (${plants.length})`}
+          : `Plants in Date Range (${dateFilteredPlants.length})`}
+      </div>
+
+      {/* enable/disable all buttons */}
+      <div style={{ display: 'flex', gap: '8px', padding: '8px 16px' }}>
+        <button
+          onClick={onEnableAll}
+          style={{
+            flex: 1,
+            padding: '6px 12px',
+            background: '#8acc50',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}
+        >
+          Enable All
+        </button>
+        <button
+          onClick={onDisableAll}
+          style={{
+            flex: 1,
+            padding: '6px 12px',
+            background: '#3a7a20',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}
+        >
+          Disable All
+        </button>
       </div>
 
       {/* plant list */}
       <div className="plant-scroll">
-        {plants.length === 0 && (
+        {dateFilteredPlants.length === 0 && (
           <div className="empty-msg">No plants match current filters</div>
         )}
-        {plants.map((p, i) => {
+        {dateFilteredPlants.map((p, i) => {
           const isSelected = selectedPlant?.plant_scientific === p.plant_scientific
+          const isEnabled = enabledPlants.has(p.plant_scientific)
           return (
             <div
               key={i}
               className={`plant-card ${isSelected ? 'plant-card--selected' : ''}`}
-              onClick={() => onPlantClick(isSelected ? null : p)}
+              style={{
+                background: isSelected ? '#c8e870' : '#2a4a1a',
+                gap: '12px',
+                padding: '12px',
+                opacity: isEnabled ? 1 : 0.5,
+                cursor: isEnabled ? 'pointer' : 'pointer',
+                // visibility: "hidden"
+              }}
+              onClick={() => {
+                if (isEnabled) onPlantClick(isSelected ? null : p)
+              }}
             >
-              {p.images?.[0]?.url && (
-                <div className="plant-thumb-wrap">
-                  <img
-                    src={p.images[0].url}
-                    alt={p.plant_common}
-                    className="plant-thumb"
-                    onError={e => { e.target.style.display = 'none' }}
-                  />
-                </div>
-              )}
-              <div className="plant-card-body">
-                <div className="plant-name">{p.plant_common}</div>
-                <div className="plant-sci">{p.plant_scientific}</div>
-                <div className="plant-meta-row">
-                  {p.growth_habit && (
-                    <span className="badge badge--habit">{p.growth_habit}</span>
-                  )}
-                  {p.native_status && (
-                    <span className={`badge badge--${p.native_status === 'Native' ? 'native' : 'introduced'}`}>
-                      {p.native_status}
-                    </span>
-                  )}
-                </div>
-                <div className="plant-songs-count">
-                  {p.songs.length} song{p.songs.length !== 1 ? 's' : ''}
+              {/* Checkbox */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: '2px',
+                  flexShrink: 0
+                }}
+                onClick={e => {
+                  e.stopPropagation()
+                  onTogglePlant(p.plant_scientific)
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={isEnabled}
+                  onChange={() => { }}
+                  style={{
+                    cursor: 'pointer',
+                    width: '18px',
+                    height: '18px',
+                    accentColor: '#8acc50'
+                  }}
+                />
+              </div>
+
+              {/* Content wrapper */}
+              <div style={{ display: 'flex', flexDirection: 'row', minWidth: 0, gap: 10, alignItems: 'center' }}>
+                {p.images?.[0]?.url && (
+                  <div className="plant-thumb-wrap">
+                    <img
+                      src={p.images[0].url}
+                      alt={p.plant_common}
+                      className="plant-thumb"
+                      onError={e => { e.target.style.display = 'none' }}
+                    />
+                  </div>
+                )}
+                <div className="plant-card-body">
+                  <div className="plant-name">{p.plant_common}</div>
+                  <div className="plant-sci">{p.plant_scientific}</div>
+                  <div className="plant-meta-row">
+                    {p.growth_habit && (
+                      <span className="badge badge--habit">{p.growth_habit}</span>
+                    )}
+                    {p.native_status && (
+                      <span className={`badge badge--${p.native_status === 'Native' ? 'native' : 'introduced'}`}>
+                        {p.native_status}
+                      </span>
+                    )}
+                  </div>
+                  <div className="plant-songs-count">
+                    {p.songs.length} song{p.songs.length !== 1 ? 's' : ''}
+                  </div>
                 </div>
               </div>
             </div>
