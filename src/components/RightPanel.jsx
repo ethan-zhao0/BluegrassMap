@@ -26,8 +26,29 @@ export default function RightPanel({
       return hasYearInRange || (includeNoYear && hasNoYear)
     })
     setDateFilteredPlants(filteredPlants)
-    setEnabledPlants(filteredPlants.reduce((set, p) => set.add(p.plant_scientific), new Set()));
   }, [plants, yearRange, includeNoYear])
+
+  // Further filter by selected state
+  const stateAndDateFilteredPlants = dateFilteredPlants.filter(p => {
+    if (!selectedState) return true
+    // Check if plant has this state in its states dictionary
+    return p.states && p.states[selectedState] && p.states[selectedState] > 0
+  })
+
+  // Auto-disable plants not in the filtered list, preserve manual toggle state for visible plants
+  useEffect(() => {
+    const visiblePlantScientificNames = new Set(stateAndDateFilteredPlants.map(p => p.plant_scientific))
+    setEnabledPlants(prev => {
+      const newSet = new Set()
+      // Keep only visible plants that were enabled
+      prev.forEach(plant => {
+        if (visiblePlantScientificNames.has(plant)) {
+          newSet.add(plant)
+        }
+      })
+      return newSet
+    })
+  }, [stateAndDateFilteredPlants, setEnabledPlants])
 
   return (
     <div className="panel">
@@ -73,7 +94,7 @@ export default function RightPanel({
       {/* plant count label */}
       <div className="panel-label" style={{ padding: '10px 16px 6px' }}>
         {selectedState
-          ? `Plants in ${selectedState} (${plants.length})`
+          ? `Plants in ${selectedState} in Date Range (${stateAndDateFilteredPlants.length})`
           : `Plants in Date Range (${dateFilteredPlants.length})`}
       </div>
 
@@ -115,10 +136,10 @@ export default function RightPanel({
 
       {/* plant list */}
       <div className="plant-scroll">
-        {dateFilteredPlants.length === 0 && (
+        {stateAndDateFilteredPlants.length === 0 && (
           <div className="empty-msg">No plants match current filters</div>
         )}
-        {dateFilteredPlants.map((p, i) => {
+        {stateAndDateFilteredPlants.map((p, i) => {
           const isSelected = selectedPlant?.plant_scientific === p.plant_scientific
           const isEnabled = enabledPlants.has(p.plant_scientific)
           return (
